@@ -1,0 +1,64 @@
+# Flusso di Funzionamento della Chat AI con Memoria Conversazionale
+
+Questo documento descrive l'architettura e il flusso di dati per la funzionalità di chat AI, che include una memoria conversazionale persistente e la capacità di cercare ricette contestualmente.
+
+## 1. Panoramica dell'Architettura
+
+Il sistema si basa su un'architettura **RAG (Retrieval-Augmented Generation)**. Invece di inviare l'intero profilo utente a ogni richiesta, il backend cerca dinamicamente le informazioni più pertinenti (le ricette) da fornire come contesto all'AI. La cronologia della conversazione viene mantenuta tra le sessioni utilizzando **Vercel KV** come database chiave-valore.
+
+## 2. Componenti Chiave
+
+1.  **Frontend**:
+    -   `ChatDrawer.tsx`: Componente React che renderizza l'interfaccia della chat utilizzando il hook `useChat` di Vercel AI SDK.
+    -   `RecipeCardInChat.tsx`: Componente specializzato per visualizzare una card di ricetta direttamente nella chat, invocato tramite un AI Tool.
+
+2.  **Backend**:
+    -   `api/chat/route.ts`: L'endpoint API che orchestra l'intero flusso, dalla gestione della memoria alla generazione della risposta.
+
+3.  **Servizi Esterni**:
+    -   **Vercel KV (via Upstash)**: Utilizzato per memorizzare la cronologia di ogni conversazione, garantendo una memoria a lungo termine.
+    -   **Supabase**: Il database che contiene i dettagli delle ricette e i loro embeddings vettoriali per la ricerca semantica.
+
+## 3. Flusso dei Dati End-to-End
+
+Il processo si svolge attraverso i seguenti passaggi:
+
+1.  **Avvio Interazione (Frontend)**:
+    -   L'utente scrive un messaggio nella `ChatDrawer`. Il hook `useChat` invia una richiesta `POST` a `/api/chat`, includendo l'ID della chat e i messaggi correnti.
+
+2.  **Recupero Memoria (Backend)**:
+    -   Il backend riceve la richiesta e utilizza l'ID della chat per recuperare da **Vercel KV** l'intera cronologia della conversazione precedente.
+
+3.  **Ricerca Semantica delle Ricette (Backend - RAG)**:
+    -   L'ultimo messaggio dell'utente viene trasformato in un **embedding vettoriale**.
+    -   Questo vettore viene usato per eseguire una ricerca di **similarità coseno** nel database Supabase, confrontandolo con gli embeddings di tutte le ricette dell'utente.
+    -   La ricetta con il punteggio di similarità più alto viene identificata come il contesto più probabile.
+
+4.  **Gestione della Memoria a Breve Termine (Backend)**:
+    -   Il sistema analizza il turno precedente della conversazione (recuperato da Vercel KV).
+    -   Se nel turno precedente l'AI ha usato lo strumento `showRecipeCard`, la ricetta corrispondente viene **caricata forzatamente** nel contesto attuale. Questo garantisce che l'AI possa rispondere a domande di follow-up dirette (`"Qual è il primo passaggio?"`) senza perdere il filo del discorso.
+
+5.  **Costruzione del Contesto Dinamico (Backend)**:
+    -   Viene assemblato un contesto finale per l'AI, che include:
+        -   I dati generali del profilo utente.
+        -   La ricetta più pertinente trovata tramite ricerca semantica.
+        -   Eventuali ricette caricate forzatamente dalla memoria a breve termine.
+
+6.  **Generazione della Risposta (Backend -> AI)**:
+    -   Viene invocata la funzione `streamText` del Vercel AI SDK, fornendo:
+        -   Il modello di linguaggio (es. Deepseek).
+        -   Un **prompt di sistema** che istruisce l'AI su come comportarsi, come usare il contesto fornito e gli strumenti a disposizione.
+        -   La cronologia completa dei messaggi.
+        -   La definizione dello strumento AI `showRecipeCard`, che accetta un `recipeId` come parametro.
+
+7.  **Streaming e Gestione Strumenti (Backend <-> Frontend)**:
+    -   La risposta dell'AI viene trasmessa in streaming al client.
+    -   Se l'AI decide di usare lo strumento `showRecipeCard`, la chiamata viene intercettata. L'informazione sull'uso dello strumento e l'ID della ricetta vengono aggiunti alla cronologia della chat.
+    -   Il frontend (`ChatDrawer`) riceve questa informazione e renderizza il componente `RecipeCardInChat.tsx` appropriato.
+
+8.  **Persistenza della Memoria (Backend)**:
+    -   Il nuovo messaggio dell'utente e la risposta completa dell'AI (testo e/o chiamate a strumenti) vengono aggiunti alla cronologia della conversazione.
+    -   L'intera cronologia aggiornata viene salvata nuovamente su **Vercel KV**.
+
+9.  **Visualizzazione (Frontend)**:
+    -   Il hook `useChat` riceve lo stream di testo e/o gli eventi degli strumenti e aggiorna l'interfaccia utente in tempo reale, mostrando la risposta dell'AI e le eventuali card delle ricette.

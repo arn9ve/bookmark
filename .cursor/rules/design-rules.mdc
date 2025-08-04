@@ -1,0 +1,624 @@
+---
+description: UI task
+alwaysApply: false
+---
+# DESIGN SYSTEM RULES - SiChef
+
+## Cose da non fare
+- NON usare gradienti se non richiesto
+- NON cambiare font (usare sempre 'Poppins', come da variabile globale)
+- NON usare icone o colori non indicati nella lista colori (vedi variabili CSS in :root)
+- NON creare nuove variabili di spaziatura (usare quelle esistenti)
+- NON usare colori hardcoded (sempre utilizzare le variabili CSS)
+- NON mescolare stili Tailwind con stili CSS custom senza coerenza
+- USA flex al posto di space-y
+
+## SISTEMA DI DESIGN
+
+*L'intero design e nuovi comportamenti generati daranno sempre la priorità al mobile*
+
+### Font e Tipografia
+1. **Poppins** (https://fonts.google.com/specimen/Poppins?preview.text=hello%20world%20&query=poppi)
+   - Definito in globals.css come `--font-family`
+   - Font weights: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
+
+2. **Gerarchia Tipografica**:
+   - `h1, .heading-1`: 28px, font-weight-semibold, line-height-tight
+   - `h2, .heading-2`: 24px, font-weight-semibold, line-height-tight
+   - `h3, .heading-3`: 20px, font-weight-medium, line-height-tight
+   - `h4, .heading-4`: 18px, font-weight-medium, line-height-normal
+   - `p, .body-text`: 16px, font-weight-normal, line-height-normal
+   - `.body-text-sm`: 14px, font-weight-normal
+   - `.caption-text`: 14px, font-weight-normal, color-tertiary
+   - `.small-text`: 12px, font-weight-normal, color-tertiary
+
+### Palette Colori e Token Globali
+
+**SEMPRE utilizzare le variabili CSS definite in globals.css**
+
+#### Colori Principali
+- `--primary`: #ADEBEB
+- `--primary-dark`: #145252
+- `--primary-light`: #D9F2F2
+- `--primary-hover`: #98DEDE
+
+#### Colori Neutri
+- `--background`: #F9F9F9
+- `--surface`: #FFFFFF
+- `--surface-secondary`: #F5F5F5
+- `--border`: #EEEEEE
+- `--border-light`: #F5F5F5
+- `--border-dark`: #CCCCCC
+
+#### Colori Testo
+- `--text-primary`: #145252
+- `--text-secondary`: #555555
+- `--text-tertiary`: #757575
+- `--text-placeholder`: #A3A3A3
+- `--text-disabled`: #CCCCCC
+
+#### Colori Stato
+- `--success`: #4CAF50 + `--success-light`: #E8F5E8
+- `--warning`: #FF9800 + `--warning-light`: #FFF3E0
+- `--error`: #D32F2F + `--error-light`: #FFEBEE
+- `--info`: #2196F3 + `--info-light`: #E3F2FD
+
+#### Colori Speciali
+- `--promo-border-1`: #C4E456
+- `--promo-border-2`: #F5C5D8
+- `--accent-1`: #FFE082
+- `--accent-2`: #B39DDB
+
+### Spaziature e Geometria
+
+#### Spaziature
+- `--space-xs`: 4px
+- `--space-sm`: 8px
+- `--space-md`: 16px
+- `--space-lg`: 24px
+- `--space-xl`: 32px
+- `--space-2xl`: 48px
+- `--space-3xl`: 64px
+
+#### Bordi e Raggi
+- `--border-radius-sm`: 8px
+- `--border-radius`: 12px (default)
+- `--border-radius-lg`: 16px
+- `--border-radius-xl`: 24px
+- `--border-width`: 1px
+- `--border-width-thick`: 2px
+
+#### Ombre (usare solo se necessario)
+- `--shadow-sm`: 0 1px 2px rgba(0, 0, 0, 0.05)
+- `--shadow`: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)
+- `--shadow-md`: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06)
+- `--shadow-lg`: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)
+
+#### Transizioni
+- `--transition-fast`: 0.15s ease-in-out
+- `--transition-normal`: 0.2s ease-in-out
+- `--transition-slow`: 0.3s ease-in-out
+
+## COMPONENTI UI
+
+### Pulsanti
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Pulsante Primario** (`.btn-primary`):
+   - Background: var(--primary)
+   - Border: var(--primary-dark)
+   - Text: var(--primary-dark)
+   - **Usare una sola CTA primaria per pagina**
+   - Hover: transform + shadow
+
+2. **Pulsante Secondario** (`.btn-secondary`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Text: var(--primary-dark)
+   - Hover: background-color + transform
+
+3. **Pulsante Terziario** (`.btn-tertiary`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Text: var(--text-tertiary)
+   - Hover: background-color change
+
+4. **Pulsanti di Stato**:
+   - `.btn-success`: Verde con testo bianco
+   - `.btn-error`: Rosso con testo bianco
+   - `.btn-warning`: Arancione con testo bianco
+
+5. **Varianti Dimensioni**:
+   - `.btn-sm`: Padding ridotto, font-size-sm
+   - `.btn-lg`: Padding aumentato, font-size-lg
+   - `.btn-xl`: Padding massimo, font-size-xl
+
+6. **Varianti Forma**:
+   - `.btn-round`: Pulsante circolare
+   - `.btn-inline`: Width auto
+   - `.btn-full`: Width 100%
+
+### Input Fields
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Input Base** (`.input-field`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Focus: border-color + box-shadow
+   - Placeholder: var(--text-placeholder)
+
+2. **Stati Input**:
+   - `.input-field.error`: Border rosso
+   - `.input-field.success`: Border verde
+   - `:disabled`: Background grigio, cursor not-allowed
+
+3. **Varianti Dimensioni**:
+   - `.input-field-sm`: Padding ridotto
+   - `.input-field-lg`: Padding aumentato
+
+4. **Textarea** (`.textarea-field`):
+   - min-height: 120px
+   - resize: vertical
+
+### Card
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Card Base** (`.card`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Padding: var(--space-md)
+   - Border-radius: var(--border-radius)
+
+2. **Varianti Card**:
+   - `.card.elevated`: Con ombra, senza bordo
+   - `.card.interactive`: Con hover effects
+   - `.card-sm/lg/xl`: Varianti padding
+
+### Avatar
+
+1. **Avatar Base** (`.avatar`):
+   - Dimensioni: 80x80px
+   - Border-radius: var(--border-radius)
+   - Object-fit: cover
+
+2. **Varianti Avatar**:
+   - `.avatar-sm`: 40x40px
+   - `.avatar-md`: 60x60px
+   - `.avatar-lg`: 80x80px
+   - `.avatar-xl`: 120x120px
+   - `.avatar-round`: border-radius: 50%
+
+### Badge e Pill
+
+1. **Badge Base** (`.badge`):
+   - Font-size: var(--font-size-xs)
+   - Text-transform: uppercase
+   - Letter-spacing: 0.5px
+
+2. **Varianti Badge**:
+   - `.badge-primary`: Colori primari
+   - `.badge-success/warning/error/info`: Colori di stato
+   - `.badge-neutral`: Colori neutri
+
+3. **Pill** (`.pill`):
+   - Border-radius: 9999px
+   - Padding orizzontale maggiore
+
+## INTEGRAZIONE TAILWIND
+
+**Il sistema è completamente integrato con Tailwind CSS**
+
+### Colori Tailwind Disponibili
+```css
+/* Esempi di utilizzo */
+bg-primary, bg-primary-dark, bg-primary-light
+text-primary, text-secondary, text-tertiary
+border-primary, border-border, border-error
+bg-success, bg-success-light, text-success
+```
+
+### Utility Classes CSS
+```css
+/* Spacing */
+.p-xs, .p-sm, .p-md, .p-lg, .p-xl
+.m-xs, .m-sm, .m-md, .m-lg, .m-xl
+
+/* Borders */
+.border, .border-top, .border-radius, .border-radius-lg
+
+/* Shadows */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg
+
+/* Backgrounds */
+.bg-primary, .bg-surface, .bg-success, .bg-error
+
+/* States */
+.hover-lift, .interactive, .focus-ring
+```
+
+## REGOLE FONDAMENTALI
+
+### 1. Consistenza Visiva
+- **Ogni elemento contenitore** deve usare lo stile base: background bianco, border sottile, border-radius
+- **Tutti i componenti** devono usare le variabili CSS definite
+- **Nessun valore hardcoded** per colori, spaziature, font
+
+### 2. Gerarchia Componenti
+- **Pulsante Primario**: Una sola CTA per pagina
+- **Pulsante Secondario**: Azioni secondarie
+- **Pulsante Terziario**: Azioni meno importanti
+- **Stati visuali**: Sempre usare i colori di stato definiti
+
+### 3. Sviluppo
+- **Mobile-first**: Ogni componente deve funzionare prima su mobile
+- **Accessibilità**: Focus states, colori contrastanti
+- **Performance**: Transizioni veloci, no animazioni pesanti
+
+### 4. Integrazione
+- **Tailwind + CSS**: Usare entrambi in modo coerente
+- **Classi personalizzate**: Solo quando necessario
+- **Variabili globali**: Sempre preferire alle classi custom
+
+### 5. Messaggi di Stato
+- **Error**: `.error-message` con colore rosso
+- **Success**: `.success-message` con colore verde
+- **Warning**: `.warning-message` con colore arancione
+- **Info**: Colore blu per informazioni
+
+## REGOLE DI IMPLEMENTAZIONE
+
+### Per Nuovi Screen
+1. **Usare sempre** le classi CSS definite in uikit.css
+2. **Combinare** con Tailwind per layout e spacing
+3. **Mantenere** la gerarchia visiva stabilita
+4. **Testare** sempre su mobile prima
+5. **Verificare** che tutti i colori siano nelle variabili
+
+### Per Nuovi Componenti
+1. **Estendere** le classi base esistenti
+2. **Usare** le variabili CSS globali
+3. **Seguire** i pattern di naming stabiliti
+4. **Documentare** le varianti create
+5. **Testare** in tutti gli stati (hover, focus, disabled)
+
+### Esempi di Utilizzo Corretto
+```tsx
+// ✅ Corretto - Usa classi CSS + Tailwind
+<button className="btn btn-primary">
+  Salva Ricetta
+</button>
+
+// ✅ Corretto - Combina componenti
+<div className="card elevated">
+  <h2 className="heading-2 text-primary">Titolo</h2>
+  <p className="body-text text-secondary">Descrizione</p>
+</div>
+
+// ✅ Corretto - Input con stato
+<input className="input-field error" />
+<p className="error-message">Campo obbligatorio</p>
+
+// ❌ Sbagliato - Colori hardcoded
+<div style={{backgroundColor: '#ADEBEB'}}>
+
+// ❌ Sbagliato - Spaziature custom
+<div className="p-[13px]">
+```
+
+---
+
+**Versione**: 2.0 - Sistema di Design Completo
+**Ultimo aggiornamento**: Gennaio 2025
+**File correlati**: `src/styles/globals.css`, `src/styles/uikit.css`# DESIGN SYSTEM RULES - SiChef
+
+## Cose da non fare
+- NON usare gradienti se non richiesto
+- NON cambiare font (usare sempre 'Poppins', come da variabile globale)
+- NON usare icone o colori non indicati nella lista colori (vedi variabili CSS in :root)
+- NON creare nuove variabili di spaziatura (usare quelle esistenti)
+- NON usare colori hardcoded (sempre utilizzare le variabili CSS)
+- NON mescolare stili Tailwind con stili CSS custom senza coerenza
+
+## SISTEMA DI DESIGN
+
+*L'intero design e nuovi comportamenti generati daranno sempre la priorità al mobile*
+
+### Font e Tipografia
+1. **Poppins** (https://fonts.google.com/specimen/Poppins?preview.text=hello%20world%20&query=poppi)
+   - Definito in globals.css come `--font-family`
+   - Font weights: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
+
+2. **Gerarchia Tipografica**:
+   - `h1, .heading-1`: 28px, font-weight-semibold, line-height-tight
+   - `h2, .heading-2`: 24px, font-weight-semibold, line-height-tight
+   - `h3, .heading-3`: 20px, font-weight-medium, line-height-tight
+   - `h4, .heading-4`: 18px, font-weight-medium, line-height-normal
+   - `p, .body-text`: 16px, font-weight-normal, line-height-normal
+   - `.body-text-sm`: 14px, font-weight-normal
+   - `.caption-text`: 14px, font-weight-normal, color-tertiary
+   - `.small-text`: 12px, font-weight-normal, color-tertiary
+
+### Palette Colori e Token Globali
+
+**SEMPRE utilizzare le variabili CSS definite in globals.css**
+
+#### Colori Principali
+- `--primary`: #ADEBEB
+- `--primary-dark`: #145252
+- `--primary-light`: #D9F2F2
+- `--primary-hover`: #98DEDE
+
+#### Colori Neutri
+- `--background`: #F9F9F9
+- `--surface`: #FFFFFF
+- `--surface-secondary`: #F5F5F5
+- `--border`: #EEEEEE
+- `--border-light`: #F5F5F5
+- `--border-dark`: #CCCCCC
+
+#### Colori Testo
+- `--text-primary`: #145252
+- `--text-secondary`: #555555
+- `--text-tertiary`: #757575
+- `--text-placeholder`: #A3A3A3
+- `--text-disabled`: #CCCCCC
+
+#### Colori Stato
+- `--success`: #4CAF50 + `--success-light`: #E8F5E8
+- `--warning`: #FF9800 + `--warning-light`: #FFF3E0
+- `--error`: #D32F2F + `--error-light`: #FFEBEE
+- `--info`: #2196F3 + `--info-light`: #E3F2FD
+
+#### Colori Speciali
+- `--promo-border-1`: #C4E456
+- `--promo-border-2`: #F5C5D8
+- `--accent-1`: #FFE082
+- `--accent-2`: #B39DDB
+
+### Spaziature e Geometria
+
+#### Spaziature
+- `--space-xs`: 4px
+- `--space-sm`: 8px
+- `--space-md`: 16px
+- `--space-lg`: 24px
+- `--space-xl`: 32px
+- `--space-2xl`: 48px
+- `--space-3xl`: 64px
+
+#### Bordi e Raggi
+- `--border-radius-sm`: 8px
+- `--border-radius`: 12px (default)
+- `--border-radius-lg`: 16px
+- `--border-radius-xl`: 24px
+- `--border-width`: 1px
+- `--border-width-thick`: 2px
+
+#### Ombre (usare solo se necessario)
+- `--shadow-sm`: 0 1px 2px rgba(0, 0, 0, 0.05)
+- `--shadow`: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)
+- `--shadow-md`: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06)
+- `--shadow-lg`: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05)
+
+#### Transizioni
+- `--transition-fast`: 0.15s ease-in-out
+- `--transition-normal`: 0.2s ease-in-out
+- `--transition-slow`: 0.3s ease-in-out
+
+## COMPONENTI UI
+
+### Pulsanti
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Pulsante Primario** (`.btn-primary`):
+   - Background: var(--primary)
+   - Border: var(--primary-dark)
+   - Text: var(--primary-dark)
+   - **Usare una sola CTA primaria per pagina**
+   - Hover: transform + shadow
+
+2. **Pulsante Secondario** (`.btn-secondary`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Text: var(--primary-dark)
+   - Hover: background-color + transform
+
+3. **Pulsante Terziario** (`.btn-tertiary`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Text: var(--text-tertiary)
+   - Hover: background-color change
+
+4. **Pulsanti di Stato**:
+   - `.btn-success`: Verde con testo bianco
+   - `.btn-error`: Rosso con testo bianco
+   - `.btn-warning`: Arancione con testo bianco
+
+5. **Varianti Dimensioni**:
+   - `.btn-sm`: Padding ridotto, font-size-sm
+   - `.btn-lg`: Padding aumentato, font-size-lg
+   - `.btn-xl`: Padding massimo, font-size-xl
+
+6. **Varianti Forma**:
+   - `.btn-round`: Pulsante circolare
+   - `.btn-inline`: Width auto
+   - `.btn-full`: Width 100%
+
+### Input Fields
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Input Base** (`.input-field`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Focus: border-color + box-shadow
+   - Placeholder: var(--text-placeholder)
+
+2. **Stati Input**:
+   - `.input-field.error`: Border rosso
+   - `.input-field.success`: Border verde
+   - `:disabled`: Background grigio, cursor not-allowed
+
+3. **Varianti Dimensioni**:
+   - `.input-field-sm`: Padding ridotto
+   - `.input-field-lg`: Padding aumentato
+
+4. **Textarea** (`.textarea-field`):
+   - min-height: 120px
+   - resize: vertical
+
+### Card
+
+**SEMPRE usare le classi CSS definite in uikit.css**
+
+1. **Card Base** (`.card`):
+   - Background: var(--surface)
+   - Border: var(--border)
+   - Padding: var(--space-md)
+   - Border-radius: var(--border-radius)
+
+2. **Varianti Card**:
+   - `.card.elevated`: Con ombra, senza bordo
+   - `.card.interactive`: Con hover effects
+   - `.card-sm/lg/xl`: Varianti padding
+
+### Avatar
+
+1. **Avatar Base** (`.avatar`):
+   - Dimensioni: 80x80px
+   - Border-radius: var(--border-radius)
+   - Object-fit: cover
+
+2. **Varianti Avatar**:
+   - `.avatar-sm`: 40x40px
+   - `.avatar-md`: 60x60px
+   - `.avatar-lg`: 80x80px
+   - `.avatar-xl`: 120x120px
+   - `.avatar-round`: border-radius: 50%
+
+### Badge e Pill
+
+1. **Badge Base** (`.badge`):
+   - Font-size: var(--font-size-xs)
+   - Text-transform: uppercase
+   - Letter-spacing: 0.5px
+
+2. **Varianti Badge**:
+   - `.badge-primary`: Colori primari
+   - `.badge-success/warning/error/info`: Colori di stato
+   - `.badge-neutral`: Colori neutri
+
+3. **Pill** (`.pill`):
+   - Border-radius: 9999px
+   - Padding orizzontale maggiore
+
+## INTEGRAZIONE TAILWIND
+
+**Il sistema è completamente integrato con Tailwind CSS**
+
+### Colori Tailwind Disponibili
+```css
+/* Esempi di utilizzo */
+bg-primary, bg-primary-dark, bg-primary-light
+text-primary, text-secondary, text-tertiary
+border-primary, border-border, border-error
+bg-success, bg-success-light, text-success
+```
+
+### Utility Classes CSS
+```css
+/* Spacing */
+.p-xs, .p-sm, .p-md, .p-lg, .p-xl
+.m-xs, .m-sm, .m-md, .m-lg, .m-xl
+
+/* Borders */
+.border, .border-top, .border-radius, .border-radius-lg
+
+/* Shadows */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg
+
+/* Backgrounds */
+.bg-primary, .bg-surface, .bg-success, .bg-error
+
+/* States */
+.hover-lift, .interactive, .focus-ring
+```
+
+## REGOLE FONDAMENTALI
+
+### 1. Consistenza Visiva
+- **Ogni elemento contenitore** deve usare lo stile base: background bianco, border sottile, border-radius
+- **Tutti i componenti** devono usare le variabili CSS definite
+- **Nessun valore hardcoded** per colori, spaziature, font
+
+### 2. Gerarchia Componenti
+- **Pulsante Primario**: Una sola CTA per pagina
+- **Pulsante Secondario**: Azioni secondarie
+- **Pulsante Terziario**: Azioni meno importanti
+- **Stati visuali**: Sempre usare i colori di stato definiti
+
+### 3. Sviluppo
+- **Mobile-first**: Ogni componente deve funzionare prima su mobile
+- **Accessibilità**: Focus states, colori contrastanti
+- **Performance**: Transizioni veloci, no animazioni pesanti
+
+### 4. Integrazione
+- **Tailwind + CSS**: Usare entrambi in modo coerente
+- **Classi personalizzate**: Solo quando necessario
+- **Variabili globali**: Sempre preferire alle classi custom
+
+### 5. Messaggi di Stato
+- **Error**: `.error-message` con colore rosso
+- **Success**: `.success-message` con colore verde
+- **Warning**: `.warning-message` con colore arancione
+- **Info**: Colore blu per informazioni
+
+## REGOLE DI IMPLEMENTAZIONE
+
+### Per Nuovi Screen
+1. **Usare sempre** le classi CSS definite in uikit.css
+2. **Combinare** con Tailwind per layout e spacing
+3. **Mantenere** la gerarchia visiva stabilita
+4. **Testare** sempre su mobile prima
+5. **Verificare** che tutti i colori siano nelle variabili
+
+### Per Nuovi Componenti
+1. **Estendere** le classi base esistenti
+2. **Usare** le variabili CSS globali
+3. **Seguire** i pattern di naming stabiliti
+4. **Documentare** le varianti create
+5. **Testare** in tutti gli stati (hover, focus, disabled)
+
+### Esempi di Utilizzo Corretto
+```tsx
+// ✅ Corretto - Usa classi CSS + Tailwind
+<button className="btn btn-primary">
+  Salva Ricetta
+</button>
+
+// ✅ Corretto - Combina componenti
+<div className="card elevated">
+  <h2 className="heading-2 text-primary">Titolo</h2>
+  <p className="body-text text-secondary">Descrizione</p>
+</div>
+
+// ✅ Corretto - Input con stato
+<input className="input-field error" />
+<p className="error-message">Campo obbligatorio</p>
+
+// ❌ Sbagliato - Colori hardcoded
+<div style={{backgroundColor: '#ADEBEB'}}>
+
+// ❌ Sbagliato - Spaziature custom
+<div className="p-[13px]">
+```
+
+---
+
+**Versione**: 2.0 - Sistema di Design Completo
+**Ultimo aggiornamento**: Gennaio 2025
+**File correlati**: `src/styles/globals.css`, `src/styles/uikit.css`

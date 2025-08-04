@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import "tailwindcss";
+@import "./uikit.css";
+
+/* ==========================================================================
+   DESIGN SYSTEM - VARIABILI GLOBALI E TEMA
+   ========================================================================== */
+
+:root {
+  /* === PALETTE COLORI PRINCIPALE === */
+  --primary: #ADEBEB;
+  --primary-dark: #145252;
+  --primary-light: #D9F2F2;
+  --primary-hover: #98DEDE;
+  
+  /* === COLORI NEUTRI === */
+  --background: #F9F9F9;
+  --surface: #FFFFFF;
+  --surface-secondary: #F5F5F5;
+  --border: #EEEEEE;
+  --border-light: #F5F5F5;
+  --border-dark: #CCCCCC;
+  
+  /* === COLORI TESTO === */
+  --text-primary: #145252;
+  --text-secondary: #555555;
+  --text-tertiary: #757575;
+  --text-placeholder: #A3A3A3;
+  --text-disabled: #CCCCCC;
+  
+  /* === COLORI STATO === */
+  --success: #4CAF50;
+  --success-light: #E8F5E8;
+  --warning: #FF9800;
+  --warning-light: #FFF3E0;
+  --error: #D32F2F;
+  --error-light: #FFEBEE;
+  --info: #2196F3;
+  --info-light: #E3F2FD;
+  
+  /* === COLORI SPECIALI === */
+  --promo-border-1: #C4E456;
+  --promo-border-2: #F5C5D8;
+  --accent-1: #FFE082;
+  --accent-2: #B39DDB;
+  
+  /* === SPAZIATURE === */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  
+  /* === GEOMETRIA E BORDI === */
+  --border-radius-sm: 8px;
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  --border-width: 1px;
+  --border-width-thick: 2px;
+  
+  /* === OMBRE === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  /* === TRANSIZIONI === */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.2s ease-in-out;
+  --transition-slow: 0.3s ease-in-out;
+  
+  /* === TIPOGRAFIA === */
+  --font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+/* ==========================================================================
+   TEMA TAILWIND CSS
+   ========================================================================== */
+
+@theme {
+  /* === FONT === */
+  --font-sans: var(--font-family), "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-blue-500: var(--primary);
+
+  /* === COLORI PRINCIPALI === */
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-primary-hover: var(--primary-hover);
+  
+  /* === COLORI NEUTRI === */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+  --color-border-dark: var(--border-dark);
+  
+  /* === COLORI TESTO === */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-placeholder: var(--text-placeholder);
+  --color-text-disabled: var(--text-disabled);
+  
+  /* === COLORI STATO === */
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+  
+  /* === COLORI SPECIALI === */
+  --color-promo-1: var(--promo-border-1);
+  --color-promo-2: var(--promo-border-2);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  
+ 
+  
+  /* === BORDI === */
+  --border-radius-sm: var(--border-radius-sm);
+  --border-radius: var(--border-radius);
+  --border-radius-lg: var(--border-radius-lg);
+  --border-radius-xl: var(--border-radius-xl);
+  --border-width: var(--border-width);
+  --border-width-2: var(--border-width-thick);
+  
+  /* === OMBRE === */
+  --box-shadow-sm: var(--shadow-sm);
+  --box-shadow: var(--shadow);
+  --box-shadow-md: var(--shadow-md);
+  --box-shadow-lg: var(--shadow-lg);
+  
+  /* === TRANSIZIONI === */
+  --transition-duration-75: var(--transition-fast);
+  --transition-duration-150: var(--transition-normal);
+  --transition-duration-300: var(--transition-slow);
+}
+
+/* ==========================================================================
+   RESET E STILI GLOBALI
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+
+}
+
+/* === RESET TIPOGRAFIA === */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+  text-wrap: pretty;
+}
+
+/* === RESET LINK === */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* === RESET PULSANTI === */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* === RESET INPUT === */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* === RESET LISTE === */
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* === UTILITY CLASSES === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Noise background layer for main containers */
+
+.noise-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/noise.png");
+  background-repeat: repeat;
+  opacity: 1;
+  pointer-events: none;
+ 
+}
+
+.mask-gradient {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after {
+  height: 0% !important;
+}

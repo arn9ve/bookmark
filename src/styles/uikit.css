@@ -1,0 +1,999 @@
+/* ==========================================================================
+   UI KIT - COMPONENTI DEL DESIGN SYSTEM
+   ========================================================================== */
+
+/* Questo file contiene tutti i componenti UI che utilizzano le variabili
+   del tema definite in globals.css. Ogni componente è costruito utilizzando
+   le design tokens per garantire coerenza in tutto il sistema.
+*/
+
+/* ==========================================================================
+   1. TIPOGRAFIA
+   ========================================================================== */
+
+   
+
+h1, .heading-1 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h2, .heading-2 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h3, .heading-3 {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h4, .heading-4 {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+p, .body-text {
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.body-text-sm {
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--text-secondary);
+}
+
+.label-text {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+}
+
+.caption-text {
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--text-tertiary);
+}
+
+.small-text {
+  font-weight: var(--font-weight-normal);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+  color: var(--text-tertiary);
+}
+
+/* === COLORI TESTO === */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-placeholder { color: var(--text-placeholder); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-error { color: var(--error); }
+.text-info { color: var(--info); }
+
+/* ==========================================================================
+   2. CONTENITORI BASE
+   ========================================================================== */
+
+.base-container {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--border);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.base-container:hover {
+  border-color: var(--border-dark);
+}
+
+.base-container.focused {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(173, 235, 235, 0.1);
+}
+
+.base-container.error {
+  border-color: var(--error);
+}
+
+.base-container.success {
+  border-color: var(--success);
+}
+
+
+
+/* ==========================================================================
+   3. CARD
+   ========================================================================== */
+
+
+/** 
+ * Card per messaggi (es. chat bubble)
+ * Si adatta al contenuto, con larghezza massima e padding ottimizzato per testo.
+ */
+.card-message {
+  display: inline-block;
+  max-width: 80vw;
+  width: fit-content;
+  padding: var(--space-md) var(--space-md);
+  background-color: var(--surface);
+  border-radius: calc(var(--border-radius) * 1.5);
+  border: var(--border-width) solid var(--border);
+  word-break: break-word;
+  text-wrap: balance;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card-message.me {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  align-self: flex-end;
+}
+
+.card-message.other {
+  background-color: var(--surface-secondary);
+  color: var(--text-primary);
+  border-color: var(--border);
+  align-self: flex-start;
+}
+
+.card-message + .card-message {
+  margin-top: var(--space-xs);
+}
+
+
+ 
+
+
+
+.card {
+  padding: var(--space-md);
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--border);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card:hover {
+  border-color: var(--border-dark);
+}
+
+.card.elevated {
+  box-shadow: var(--shadow);
+  border: none;
+}
+
+.card.elevated:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card.interactive {
+  cursor: pointer;
+}
+
+.card.interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card.interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+/* === VARIANTI CARD === */
+.card-sm {
+  padding: var(--space-sm);
+}
+
+.card-lg {
+  padding: var(--space-lg);
+}
+
+.card-xl {
+  padding: var(--space-xl);
+}
+
+/* ==========================================================================
+   4. AVATAR
+   ========================================================================== */
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius);
+  object-fit: cover;
+  border: var(--border-width) solid var(--border);
+  background-color: var(--surface-secondary);
+}
+
+/* === VARIANTI AVATAR === */
+.avatar-sm {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-md {
+  width: 60px;
+  height: 60px;
+}
+
+.avatar-lg {
+  width: 80px;
+  height: 80px;
+}
+
+.avatar-xl {
+  width: 120px;
+  height: 120px;
+}
+
+.avatar-round {
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   5. CAMPI DI INPUT
+   ========================================================================== */
+
+
+
+.chat-section-bottom:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: linear-gradient(to top, white 20%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.6) 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, white 20%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.6) 70%, transparent 100%);
+}
+
+
+.input-field {
+  background-color: var(--surface);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--border);
+  width: 100%;
+  padding: 14px var(--space-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--text-secondary);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.input-field::placeholder {
+  color: var(--text-placeholder);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(173, 235, 235, 0.1);
+}
+
+.input-field:hover:not(:focus) {
+  border-color: var(--border-dark);
+}
+
+.input-field.error {
+  border-color: var(--error);
+}
+
+.input-field.error:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+
+.input-field.success {
+  border-color: var(--success);
+}
+
+.input-field:disabled {
+  background-color: var(--surface-secondary);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* === VARIANTI INPUT === */
+.input-field-sm {
+  padding: 10px var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.input-field-lg {
+  padding: 18px var(--space-lg);
+  font-size: var(--font-size-lg);
+}
+
+/* === TEXTAREA === */
+.textarea-field {
+  min-height: 120px;
+  resize: vertical;
+  font-family: var(--font-family);
+}
+
+/* === MESSAGGI DI ERRORE === */
+.error-message {
+  color: var(--error);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.success-message {
+  color: var(--success);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.warning-message {
+  color: var(--warning);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* ==========================================================================
+   6. PULSANTI
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: fit-content;
+  padding: 14px var(--space-lg);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  border-radius: var(--border-radius);
+  border-width: var(--border-width);
+  border-style: solid;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* === PULSANTE PRIMARIO === */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary-dark);
+  color: var(--primary-dark);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+ 
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:disabled {
+  background-color: var(--surface);
+  color: var(--text-disabled);
+  border-color: var(--border);
+}
+
+/* === PULSANTE SECONDARIO === */
+.btn-secondary {
+  background-color: var(--surface);
+  border-color: var(--border);
+  color: var(--primary-dark);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-secondary);
+  border-color: var(--border-dark);
+  transform: translateY(-1px);
+
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-color: var(--surface-secondary);
+  transform: translateY(0);
+}
+
+.btn-secondary:disabled {
+  background-color: var(--surface);
+  color: var(--text-disabled);
+  border-color: var(--border);
+}
+
+/* === PULSANTE TERZIARIO === */
+.btn-tertiary {
+  background-color: var(--surface);
+  border-color: var(--border);
+  color: var(--text-tertiary);
+}
+
+.btn-tertiary:hover:not(:disabled) {
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-tertiary:active:not(:disabled) {
+  background-color: var(--surface-secondary);
+}
+
+.btn-tertiary:disabled {
+  background-color: transparent;
+  color: var(--text-placeholder);
+  border-color: var(--border);
+  cursor: not-allowed;
+}
+
+.btn-tertiary.btn-error {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.btn-tertiary.btn-error:hover:not(:disabled) {
+  background-color: var(--error-light);
+  color: var(--error);
+}
+
+/* === PULSANTI DI STATO === */
+.btn-success {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #45A049;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn-error {
+  background-color: var(--error);
+  border-color: var(--error);
+  color: white;
+}
+
+.btn-error:hover:not(:disabled) {
+  background-color: #C62828;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn-warning {
+  background-color: var(--warning);
+  border-color: var(--warning);
+  color: white;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: #F57C00;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+/* === VARIANTI DIMENSIONI === */
+.btn-sm {
+  padding: 10px var(--space-md);
+  font-size: var(--font-size-sm);
+  gap: var(--space-sm);
+}
+
+.btn-lg {
+  padding: 18px var(--space-xl);
+  font-size: var(--font-size-lg);
+  gap: var(--space-md);
+}
+
+.btn-xl {
+  padding: 22px var(--space-2xl);
+  font-size: var(--font-size-xl);
+  gap: var(--space-md);
+}
+
+/* === VARIANTI FORMA === */
+.btn-round {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+}
+
+.btn-round.btn-sm {
+  width: 36px;
+  height: 36px;
+}
+
+.btn-round.btn-lg {
+  width: 56px;
+  height: 56px;
+}
+
+.btn-inline {
+  width: auto;
+  display: inline-flex;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* === ICONE NEI PULSANTI === */
+.btn-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.btn-sm .btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-lg .btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.btn-xl .btn-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* ==========================================================================
+   7. BADGE E PILL
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-primary {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.badge-success {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.badge-warning {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+.badge-error {
+  background-color: var(--error-light);
+  color: var(--error);
+}
+
+.badge-info {
+  background-color: var(--info-light);
+  color: var(--info);
+}
+
+.badge-neutral {
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+}
+
+/* === PILL === */
+.pill {
+  border-radius: 9999px;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+/* ==========================================================================
+   8. UTILITY CLASSES
+   ========================================================================== */
+
+/* === SPACING === */
+.p-xs { padding: var(--space-xs); }
+.p-sm { padding: var(--space-sm); }
+.p-md { padding: var(--space-md); }
+.p-lg { padding: var(--space-lg); }
+.p-xl { padding: var(--space-xl); }
+
+.m-xs { margin: var(--space-xs); }
+.m-sm { margin: var(--space-sm); }
+.m-md { margin: var(--space-md); }
+.m-lg { margin: var(--space-lg); }
+.m-xl { margin: var(--space-xl); }
+
+/* === BORDERS === */
+.border { border: var(--border-width) solid var(--border); }
+.border-top { border-top: var(--border-width) solid var(--border); }
+.border-bottom { border-bottom: var(--border-width) solid var(--border); }
+.border-left { border-left: var(--border-width) solid var(--border); }
+.border-right { border-right: var(--border-width) solid var(--border); }
+
+.border-radius { border-radius: var(--border-radius); }
+.border-radius-sm { border-radius: var(--border-radius-sm); }
+.border-radius-lg { border-radius: var(--border-radius-lg); }
+.border-radius-xl { border-radius: var(--border-radius-xl); }
+
+/* === SHADOWS === */
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow { box-shadow: var(--shadow); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+/* === BACKGROUNDS === */
+.bg-primary { background-color: var(--primary); }
+.bg-surface { background-color: var(--surface); }
+.bg-background { background-color: var(--background); }
+.bg-success { background-color: var(--success-light); }
+.bg-warning { background-color: var(--warning-light); }
+.bg-error { background-color: var(--error-light); }
+.bg-info { background-color: var(--info-light); }
+
+/* === TRANSITIONS === */
+.transition-fast { transition: all var(--transition-fast); }
+.transition-normal { transition: all var(--transition-normal); }
+.transition-slow { transition: all var(--transition-slow); }
+
+/* === STATES === */
+.hover-lift {
+  transition: transform var(--transition-normal);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.interactive {
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.interactive:hover {
+  transform: translateY(-1px);
+}
+
+.interactive:active {
+  transform: translateY(0);
+}
+
+/* === FOCUS STATES === */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(173, 235, 235, 0.1);
+}
+
+.focus-ring-error:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+
+.focus-ring-success:focus {
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px var(--success-light);
+}
+
+/* ==========================================================================
+   10. ANIMAZIONI
+   ========================================================================== */
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-0.5%) rotate(-1deg); }
+  20%, 40%, 60%, 80% { transform: translateX(0.5%) rotate(1deg); }
+}
+
+.shake {
+  animation: shake 4s infinite;
+}
+
+/* ==========================================================================
+   11. UTILITIES PER CAROSELLO
+   ========================================================================== */
+
+/* Nasconde la scrollbar mantenendo la funzionalità di scroll */
+.scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+  /* Internet Explorer e Edge */
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  /* WebKit */
+  display: none;
+}
+
+/* Utility classes per tab bar */
+.bg-primary-light {
+  background-color: var(--primary-light);
+}
+
+/* === TEXT TRUNCATION === */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   VAULT CARDS
+   ========================================================================== */
+
+.vault-card {
+  display: flex;
+  position: relative;
+  min-width: 20rem;
+  max-width: 20rem;
+  min-height: 10rem;
+  max-height: 12rem;
+
+
+  padding: var(--space-md);
+  gap: var(--space-md);
+
+  border-radius: var(--border-radius-xl);
+  flex-shrink: 0;
+  transition: all 0.2s;
+  text-decoration: none;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  
+}
+
+.vault-card:hover {
+  transform: scale(1.02);
+}
+
+.vault-card:active {
+  transform: scale(0.98);
+}
+
+/* Promo Card */
+.vault-card-promo {
+
+  background: var(--promo-light-color);
+  border: 1px solid var(--promo-primary-color);
+}
+
+.vault-card-promo .promo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.vault-card-promo .promo-logo {
+ 
+}
+
+/* Recipe Card */
+.vault-card-recipe {
+
+}
+
+.vault-card-recipe .recipe-image-wrapper {
+  position: relative;
+  width: 8rem; /* 128px */
+  height: 8rem; /* 128px */
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-secondary);
+  flex-shrink: 0;
+}
+
+.vault-card-recipe .recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vault-card-recipe .recipe-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  text-align: left;
+}
+
+.vault-card-recipe .recipe-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+/* Book Card */
+.vault-card-book {
+  padding: var(--space-md);
+  gap: var(--space-md);
+  max-height: 16rem;
+  background-color: var(--surface-secondary);
+
+  border-radius: var(--border-radius-xl);
+  border: 1px solid #EBCDAD;
+  background: #FAF2EA;
+}
+
+.vault-card-book .book-image-wrapper {
+  position: relative;
+  width: 6rem; /* 96px */
+  height: 8rem; /* 128px */
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-secondary);
+  flex-shrink: 0;
+}
+
+.vault-card-book .divider {
+  border-color: #EBCDAD;
+  border-style: solid;
+
+}
+
+.vault-card-book .book-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vault-card-book .book-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  text-align: left;
+}
+
+.vault-card-book .book-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.vault-card-book .book-rating .star-icon {
+  width: 0.75rem; /* 12px */
+  height: 0.75rem; /* 12px */
+  fill: #facc15; /* yellow-400 */
+  color: #facc15; /* yellow-400 */
+}
+
+/* Site Card */
+.vault-card-site {
+  padding: var(--space-md);
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
+  text-align: center;
+  gap: 0.75rem; /* 12px */
+  border-radius: var(--border-radius-xl);
+  border: 1px solid #ADEBEB;
+  background: #EFFBFB;
+}
+
+.vault-card-site .site-icon {
+  width: 2rem; /* 32px */
+  height: 2rem; /* 32px */
+  color: var(--text-secondary);
+}
+
+/* Collection Card */
+.vault-card-collection {
+  padding: 0.75rem; /* 12px */
+  border: 1px solid #f3f3f3;
+  background-color: white;
+  align-items: flex-end;
+}
+
+.vault-card-collection .collection-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  text-align: left;
+}
+
+.vault-card-collection .collection-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  gap: var(--space-sm);
+  width: 130px;
+  height: 130px;
+  align-self: flex-start;
+}
+
+.vault-card-collection .collection-gallery-item {
+  width: 61px;
+  height: 61px;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-secondary);
+}
+
+.vault-card-collection .collection-gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+

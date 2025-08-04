@@ -1,0 +1,27 @@
+
+# Flusso di Gestione del Profilo Utente
+
+Questa guida descrive il flusso per la visualizzazione e la modifica dei profili utente, basato su URL puliti (es. `/nomeutente`).
+
+## Punti Chiave
+
+1.  **URL e Routing**:
+    *   Gli URL dei profili sono diretti e puliti: `/<username>` (es. `/arnove`).
+    *   Le richieste per `/<username>` e `/<username>/settings` vengono internamente riscritte (rewrite) da Next.js per puntare alle pagine corrette.
+    *   La configurazione delle riscritture si trova in [next.config.js](mdc:next.config.js) e utilizza la direttiva `afterFiles` per non entrare in conflitto con le rotte statiche.
+
+2.  **Struttura dei File**:
+    *   La pagina del profilo pubblico si trova in [src/app/profile/[username]/page.tsx](mdc:src/app/profile/[username]/page.tsx).
+    *   La pagina per la modifica delle impostazioni del profilo è in [src/app/profile/[username]/settings/page.tsx](mdc:src/app/profile/[username]/settings/page.tsx).
+    *   La vecchia cartella `src/app/@` è stata rinominata in `src/app/profile` e la cartella `src/app/u` è stata eliminata per semplificare il routing.
+
+3.  **Flusso di Navigazione**:
+    *   Tutti i link interni all'applicazione (es. da `src/app/page.tsx` o `src/app/start/page.tsx`) puntano direttamente a `/<username>`, senza il prefisso `@`.
+    *   Il pulsante "Modifica" sul profilo pubblico reindirizza a `/<username>/settings`.
+
+4.  **Logica di Backend e Autenticazione**:
+    *   La logica server per i profili rimane invariata e si trova in [src/server/api/routers/profiles.ts](mdc:src/server/api/routers/profiles.ts).
+    *   Lo stato di autenticazione è gestito da [src/app/_components/AuthProvider.tsx](mdc:src/app/_components/AuthProvider.tsx), che determina se un utente è il proprietario di un profilo.
+
+    *   Il reindirizzamento dopo un login OAuth (es. Google) ora punta alla radice del sito (`/`) e non più a `/profile`. La logica si trova nella funzione `loginWithProvider`.
+    *   La pagina principale [src/app/page.tsx](mdc:src/app/page.tsx) ora apre un modale di autenticazione ([src/app/_components/AuthModal.tsx](mdc:src/app/_components/AuthModal.tsx)) invece di reindirizzare.

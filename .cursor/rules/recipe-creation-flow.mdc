@@ -1,0 +1,214 @@
+# Flusso di Creazione Ricette da Link Social Media
+
+Questa guida descrive il sistema completo implementato per permettere agli utenti di aggiungere ricette al loro profilo partendo da link di video TikTok o Instagram.
+
+## Panoramica del Flusso
+
+Il sistema permette agli utenti autenticati di:
+1. Inserire un link video da TikTok/Instagram tramite una drawer laterale
+2. Elaborare automaticamente il video attraverso API specializzate
+3. Strutturare i dati in una ricetta modificabile
+4. Salvare la ricetta nel proprio profilo pubblico
+5. Visualizzare, modificare ed eliminare le ricette salvate
+
+## Componenti Principali
+
+### 1. AddRecipeUrlDrawer ([src/app/_components/AddRecipeUrlDrawer.tsx](mdc:src/app/_components/AddRecipeUrlDrawer.tsx))
+
+**Responsabilità**: Gestire l'input del link video e l'elaborazione iniziale.
+
+**Funzionalità**:
+- Form per inserimento URL video
+- Gestione stato di elaborazione con progress bar
+- Chiamate sequenziali alle API di elaborazione:
+  1. `/api/getVideoInfo` - Estrae metadati video
+  2. `/api/transcribeAudio` - Trascrizione audio (se disponibile)
+  3. `/api/structureRecipe` - Struttura i dati in ricetta
+
+**Props**:
+```typescript
+interface AddRecipeUrlDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onRecipeCreated: (response: StructureRecipeResponse) => void;
+}
+```
+
+### 2. RecipeCreationDrawer ([src/app/_components/RecipeCreationDrawer.tsx](mdc:src/app/_components/RecipeCreationDrawer.tsx))
+
+**Responsabilità**: Permettere la modifica e conferma della ricetta strutturata.
+
+**Funzionalità**:
+- Editing completo di tutti i campi ricetta
+- Gestione ingredienti e istruzioni dinamiche
+- Validazione dati prima del salvataggio
+- Interfaccia user-friendly per review finale
+
+**Props**:
+```typescript
+interface RecipeCreationDrawerProps {
+  recipe: StructuredRecipe;
+  heroImage: string;
+  sourceUrl?: string;
+  onSave: (recipeData: CreateRecipeInput) => Promise<void>;
+  onClose: () => void;
+  isLoading?: boolean;
+  isOpen: boolean;
+}
+```
+
+### 3. RecipeViewDrawer ([src/app/_components/RecipeViewDrawer.tsx](mdc:src/app/_components/RecipeViewDrawer.tsx))
+
+**Responsabilità**: Visualizzazione e modifica di ricette esistenti.
+
+**Funzionalità**:
+- Modalità view/edit commutabili
+- Editing inline dei campi
+- Gestione completa di ingredienti e istruzioni
+- Salvataggio modifiche tramite tRPC
+
+### 4. Pagina Profilo ([src/app/profile/[username]/page.tsx](mdc:src/app/profile/[username]/page.tsx))
+
+**Responsabilità**: Orchestrare l'intero flusso e gestire lo stato globale.
+
+**Stato Gestito**:
+```typescript
+// State per le drawer
+const [isAddUrlDrawerOpen, setAddUrlDrawerOpen] = useState(false);
+const [isCreateDrawerOpen, setCreateDrawerOpen] = useState(false);
+const [isViewDrawerOpen, setViewDrawerOpen] = useState(false);
+const [recipeForEditing, setRecipeForEditing] = useState<StructureRecipeResponse | null>(null);
+const [selectedRecipe, setSelectedRecipe] = useState<Recipe | PublicRecipe | null>(null);
+const [drawerMode, setDrawerMode] = useState<'view' | 'edit'>('view');
+```
+
+**Mutations tRPC**:
+- `createRecipeMutation` - Creazione nuove ricette
+- `updateRecipeMutation` - Aggiornamento ricette esistenti
+- `deleteRecipeMutation` - Eliminazione ricette
+
+## Flusso Operativo Completo
+
+### Fase 1: Apertura Drawer URL
+1. L'utente proprietario del profilo vede il pulsante "Aggiungi ricetta"
+2. Click su pulsante → `setAddUrlDrawerOpen(true)`
+3. Si apre `AddRecipeUrlDrawer`
+
+### Fase 2: Elaborazione Video
+1. Utente incolla URL video TikTok/Instagram
+2. Submit form → chiamata sequenziale API:
+   ```typescript
+   // 1. Analisi video
+   POST /api/getVideoInfo
+   // 2. Trascrizione audio (se presente)
+   POST /api/transcribeAudio
+   // 3. Strutturazione ricetta
+   POST /api/structureRecipe
+   ```
+3. Progress tracking visivo durante elaborazione
+
+### Fase 3: Transizione a Modifica
+1. Elaborazione completata → `handleRecipeCreated(response)`
+2. Chiusura drawer URL, apertura drawer creazione:
+   ```typescript
+   setRecipeForEditing(response);
+   setAddUrlDrawerOpen(false);
+   setCreateDrawerOpen(true);
+   ```
+
+### Fase 4: Review e Salvataggio
+1. `RecipeCreationDrawer` carica dati strutturati
+2. Utente può modificare tutti i campi
+3. Salvataggio → `handleSaveNewRecipe()`:
+   ```typescript
+   await createRecipeMutation.mutateAsync({
+     ...recipeData,
+     user_id: user.id, // CRITICO: associa ricetta all'utente
+   });
+   ```
+
+### Fase 5: Aggiornamento UI
+1. Salvataggio completato → invalidazione cache:
+   ```typescript
+   utils.profiles.getPublicProfile.invalidate({ username });
+   ```
+2. Ricarica automatica lista ricette
+3. Chiusura drawer creazione
+
+## Gestione Ricette Esistenti
+
+### Visualizzazione
+1. Click su card ricetta → `handleViewRecipe(recipe)`
+2. Caricamento ricetta completa via `api.recipes.getById`
+3. Apertura `RecipeViewDrawer` in modalità 'view'
+
+### Modifica
+1. Click su menu opzioni → "Modifica"
+2. Caricamento ricetta completa → apertura drawer in modalità 'edit'
+3. Salvataggio → `updateRecipeMutation`
+
+### Eliminazione
+1. Click su menu opzioni → "Elimina"
+2. Conferma utente → `deleteRecipeMutation`
+3. Invalidazione cache e aggiornamento UI
+
+## Backend Integration
+
+### API Routes
+- [/api/getVideoInfo](mdc:src/app/api/getVideoInfo/route.ts) - Estrazione metadati video
+- [/api/transcribeAudio](mdc:src/app/api/transcribeAudio/route.ts) - Trascrizione audio
+- [/api/structureRecipe](mdc:src/app/api/structureRecipe/route.ts) - Strutturazione ricetta
+
+### tRPC Procedures
+- [src/server/api/routers/recipes.ts](mdc:src/server/api/routers/recipes.ts):
+  - `create` - Creazione ricette
+  - `update` - Aggiornamento ricette  
+  - `delete` - Eliminazione ricette
+  - `getById` - Recupero ricetta completa
+
+- [src/server/api/routers/profiles.ts](mdc:src/server/api/routers/profiles.ts):
+  - `getPublicProfile` - Include ricette pubbliche dell'utente
+
+## Fix Implementati
+
+### Problema: Ricette non visibili dopo salvataggio
+**Causa**: Le ricette venivano create senza `user_id`, quindi non rientravano nella query di `getPublicProfile`.
+
+**Soluzione**: Aggiunta esplicita di `user_id` nella mutation:
+```typescript
+await createRecipeMutation.mutateAsync({
+  ...recipeData,
+  user_id: user.id, // Associazione esplicita all'utente
+});
+```
+
+### Problema: Type safety con Recipe vs PublicRecipe
+**Soluzione**: Type guards e casting esplicito:
+```typescript
+recipe={selectedRecipe && 'instructions' in selectedRecipe ? selectedRecipe as Recipe : null}
+```
+
+## Note Tecniche
+
+### Gestione Stato Drawer
+- Uso di stati booleani separati per ogni drawer
+- Transizioni gestite tramite callback chain
+- Cleanup automatico su chiusura
+
+### Cache Invalidation
+- Utilizzo di `utils.profiles.getPublicProfile.invalidate()` per aggiornamento automatico
+- Strategia ottimistica per UX fluida
+
+### Error Handling
+- Toast notifications per feedback utente
+- Gestione errori granulare per ogni fase del processo
+- Rollback automatico in caso di fallimento
+
+### Permessi
+- Controlli di ownership: `user?.username === username`
+- Visibilità condizionale di pulsanti e menu
+- Validazione user_id lato server
+description:
+globs:
+alwaysApply: false
+---
