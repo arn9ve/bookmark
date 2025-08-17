@@ -21,8 +21,10 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 # Public keys for client-side
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+# These are safe to expose in the browser
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+**ATTENZIONE:** Non committare mai il tuo file `.env` su Git. Assicurati che `.env` sia presente nel tuo file `.gitignore` per evitare di esporre le tue chiave segrete.
 
 # Altre variabili esistenti...
 ```

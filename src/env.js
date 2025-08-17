@@ -8,6 +8,7 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
+    GOOGLE_MAPS_KEY: z.string().min(1)
   },
 
   /**
@@ -25,6 +26,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    GOOGLE_MAPS_KEY: process.env.GOOGLE_MAPS_KEY
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

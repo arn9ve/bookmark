@@ -48,6 +48,8 @@ Questo è un progetto [T3 Stack](https://create.t3.gg/) potenziato con Supabase 
     ```
     Puoi trovare `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` nelle impostazioni del tuo progetto Supabase (Settings > API).
 
+    **ATTENZIONE:** Non committare mai il tuo file `.env` su Git. Assicurati che `.env` sia presente nel tuo file `.gitignore` per evitare di esporre le tue chiavi segrete.
+
 4.  **Avvia il server di sviluppo (integrato con Netlify CLI):**
     ```bash
     netlify dev
