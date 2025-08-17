@@ -5,6 +5,7 @@ import type { ScrapedData } from "@/src/types";
 import { getMarkerIcon, getMarkerSize } from "./MarkerIcons";
 import { classifyRestaurant } from "@/src/lib/scraping/classification";
 import { MapLegend } from "./MapLegend";
+import { env } from "@/src/env";
 
 // Stile minimale per la mappa
 const mapStyles = [
@@ -114,7 +115,7 @@ interface MapProps {
 const Map = ({ data, onSelect, selectedItem }: MapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDKs0ZWA1bAaNXpiaEeabAXnfAEfgJuolU",
+    googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
     libraries: ['places'],
   });
 
@@ -135,6 +136,14 @@ const Map = ({ data, onSelect, selectedItem }: MapProps) => {
 
     if (hasValidLocations) {
       map.fitBounds(bounds);
+
+      // Evita uno zoom out eccessivo quando i punti sono molto distanti
+      google.maps.event.addListenerOnce(map, 'idle', () => {
+        const currentZoom = map.getZoom();
+        if (currentZoom && currentZoom < 3) {
+          map.setZoom(3);
+        }
+      });
     } else {
       map.setCenter(center);
       map.setZoom(6);
@@ -158,7 +167,22 @@ const Map = ({ data, onSelect, selectedItem }: MapProps) => {
     <div className="relative">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        options={{ styles: mapStyles, streetViewControl: false, mapTypeControl: false, fullscreenControl: false, backgroundColor: mapBackground }}
+        options={{
+          styles: mapStyles,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          backgroundColor: mapBackground,
+          restriction: {
+            latLngBounds: {
+              north: 85,
+              south: -85,
+              west: -180,
+              east: 180,
+            },
+            strictBounds: true,
+          },
+        }}
         onLoad={onLoad}
       >
         {data.map(item => {
