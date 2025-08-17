@@ -14,22 +14,14 @@
    
 
 h1, .heading-1 {
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-3xl);
-  line-height: var(--line-height-tight);
-  color: var(--text-primary);
-  margin: 0;
-}
-
-h2, .heading-2 {
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   font-size: var(--font-size-2xl);
   line-height: var(--line-height-tight);
   color: var(--text-primary);
   margin: 0;
 }
 
-h3, .heading-3 {
+h2, .heading-2 {
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-xl);
   line-height: var(--line-height-tight);
@@ -37,12 +29,28 @@ h3, .heading-3 {
   margin: 0;
 }
 
-h4, .heading-4 {
+h3, .heading-3 {
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-lg);
   line-height: var(--line-height-normal);
   color: var(--text-primary);
   margin: 0;
+}
+
+h4, .heading-4 {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Nuovo livello più piccolo usato spesso nelle sezioni */
+.heading-5 {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
 }
 
 p, .body-text {
@@ -100,6 +108,7 @@ p, .body-text {
   background-color: var(--surface);
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow);
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
@@ -174,6 +183,7 @@ p, .body-text {
   background-color: var(--surface);
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--border);
+  box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
@@ -397,15 +407,16 @@ p, .body-text {
 
 /* === PULSANTE PRIMARIO === */
 .btn-primary {
-  background-color: var(--primary);
-  border-color: var(--primary-dark);
-  color: var(--primary-dark);
+  background-color: var(--accent-1);
+  border-color: var(--border-dark);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
- 
+  background-color: var(--accent-1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -422,16 +433,16 @@ p, .body-text {
 
 /* === PULSANTE SECONDARIO === */
 .btn-secondary {
-  background-color: var(--surface);
-  border-color: var(--border);
-  color: var(--primary-dark);
+  background-color: var(--primary);
+  border-color: var(--border-dark);
+  color: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--surface-secondary);
-  border-color: var(--border-dark);
-  transform: translateY(-1px);
-
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
 .btn-secondary:active:not(:disabled) {
@@ -447,9 +458,10 @@ p, .body-text {
 
 /* === PULSANTE TERZIARIO === */
 .btn-tertiary {
-  background-color: var(--surface);
-  border-color: var(--border);
-  color: var(--text-tertiary);
+  background-color: var(--surface-secondary);
+  border-color: var(--border-dark);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-tertiary:hover:not(:disabled) {
@@ -584,6 +596,69 @@ p, .body-text {
 }
 
 /* ==========================================================================
+   BRUTALIST TABS + ICON BUTTONS
+   ==========================================================================
+*/
+
+/* Tabs group container */
+.tab-group {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: var(--border-radius);
+  background-color: var(--surface);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: var(--border-width) solid var(--border-dark);
+  border-radius: 6px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal);
+}
+
+.tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-btn.is-active {
+  background-color: var(--accent-1);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Icon-only buttons */
+.btn-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-width) solid var(--border-dark);
+  background-color: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), background-color var(--transition-normal), color var(--transition-normal);
+  padding: 0;
+}
+
+.btn-icon-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-icon-button.btn-sm { width: 32px; height: 32px; }
+.btn-icon-button.btn-md { width: 40px; height: 40px; }
+.btn-icon-button.btn-lg { width: 56px; height: 56px; }
+
+.btn-fav { background-color: var(--surface); color: var(--text-primary); }
+.btn-fav.is-active { background-color: var(--accent-1); color: var(--text-primary); }
+
+.btn-delete { background-color: var(--surface); color: var(--error); }
+.btn-delete:hover { background-color: var(--error); color: var(--surface); }
+
+/* ==========================================================================
    7. BADGE E PILL
    ========================================================================== */
 
@@ -600,8 +675,8 @@ p, .body-text {
 }
 
 .badge-primary {
-  background-color: var(--primary-light);
-  color: var(--primary-dark);
+  background-color: var(--accent-1);
+  color: var(--text-primary);
 }
 
 .badge-success {
@@ -679,6 +754,7 @@ p, .body-text {
 .bg-warning { background-color: var(--warning-light); }
 .bg-error { background-color: var(--error-light); }
 .bg-info { background-color: var(--info-light); }
+.bg-accent-1 { background-color: var(--accent-1); }
 
 /* === TRANSITIONS === */
 .transition-fast { transition: all var(--transition-fast); }

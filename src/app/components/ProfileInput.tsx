@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Search } from "lucide-react";
 
 interface ProfileInputProps {
   onScrape: (url: string) => void;
@@ -18,33 +19,31 @@ export default function ProfileInput({ onScrape, isLoading }: ProfileInputProps)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-      <div className="flex-1">
+    <form onSubmit={handleSubmit} className="flex sm:flex-row gap-2 w-full max-w-full">
+      <div className="flex-1 w-full">
         <input
           type="text"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter TikTok or Instagram profile URL"
-          className="input-field"
+          placeholder="Inserisci URL profilo TikTok o Instagram"
+          className="input-field input-field-sm"
           disabled={isLoading}
         />
       </div>
       <button 
         type="submit" 
-        className="btn btn-primary btn-lg hover-lift px-8" 
+        className="btn btn-primary btn-sm hover-lift" 
         disabled={isLoading || !url.trim()}
       >
         {isLoading ? (
           <>
-            <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
             Analizzando...
           </>
         ) : (
           <>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            Scopri
+            <Search className="w-4 h-4" />
+         
           </>
         )}
       </button>

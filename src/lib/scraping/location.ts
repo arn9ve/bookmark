@@ -4,6 +4,8 @@ interface GeocodeResult {
   latitude?: number;
   longitude?: number;
   formattedAddress?: string;
+  name?: string;
+  placeId?: string;
   error?: string;
 }
 
@@ -11,39 +13,34 @@ export async function geocodeRestaurant(
   name: string,
   location: string
 ): Promise<GeocodeResult> {
-  // Combinazione più robusta per la query
   const query = `${name}, ${location}`;
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-    query
-  )}&format=json&limit=1`;
+  const apiKey = "AIzaSyDKs0ZWA1bAaNXpiaEeabAXnfAEfgJuolU";
+  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${apiKey}`;
 
   try {
-    console.log(`[Geocoding] Sto cercando: "${query}"`);
-    const response = await fetch(url, {
-      headers: {
-        // L'API di Nominatim richiede un User-Agent personalizzato
-        "User-Agent": "SiChefApp/1.0 (contact@sichef.com)",
-      },
-    });
+    console.log(`[Geocoding] Sto cercando: "${query}" con Google Places API`);
+    const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`La richiesta a Nominatim è fallita con stato: ${response.status}`);
+      throw new Error(`La richiesta a Google Places API è fallita con stato: ${response.status}`);
     }
 
     const data = await response.json();
 
-    if (data && data.length > 0) {
-      const bestMatch = data[0];
-      console.log(`[Geocoding] Trovato: "${bestMatch.display_name}"`);
+    if (data.status === "OK" && data.results.length > 0) {
+      const bestMatch = data.results[0];
+      console.log(`[Geocoding] Trovato: "${bestMatch.name}" - ${bestMatch.formatted_address}`);
       return {
-        latitude: parseFloat(bestMatch.lat),
-        longitude: parseFloat(bestMatch.lon),
-        formattedAddress: bestMatch.display_name,
+        latitude: bestMatch.geometry.location.lat,
+        longitude: bestMatch.geometry.location.lng,
+        formattedAddress: bestMatch.formatted_address,
+        name: bestMatch.name,
+        placeId: bestMatch.place_id,
       };
     } else {
-      console.warn(`[Geocoding] Nessun risultato per: "${query}"`);
+      console.warn(`[Geocoding] Nessun risultato per: "${query}". Status: ${data.status}`);
       return {
-        error: "No results found",
+        error: data.status === "ZERO_RESULTS" ? "No results found" : data.status,
       };
     }
   } catch (error) {

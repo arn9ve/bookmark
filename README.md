@@ -27,8 +27,8 @@ Questo è un progetto [T3 Stack](https://create.t3.gg/) potenziato con Supabase 
 
 1.  **Clona il repository (se non l'hai già fatto):**
     ```bash
-    git clone https://github.com/arn9ve/sichef.git
-    cd sichef
+    git clone https://github.com/arn9ve/bookmark.git
+    cd bookmark
     ```
 
 2.  **Installa le dipendenze:**
@@ -64,9 +64,9 @@ Questo è un progetto [T3 Stack](https://create.t3.gg/) potenziato con Supabase 
 
 ## Deploy
 
-Il deploy è gestito automaticamente da Netlify. Ogni push sul branch `main` del repository GitHub (`arn9ve/sichef`) triggererà un nuovo build e deploy del sito.
+Il deploy è gestito automaticamente da Netlify. Ogni push sul branch `main` del repository GitHub (`arn9ve/bookmark`) triggererà un nuovo build e deploy del sito.
 
-Puoi monitorare lo stato dei deploy e accedere al tuo sito dalla dashboard di Netlify: [https://app.netlify.com/sites/sichef](https://app.netlify.com/sites/sichef) (o l'URL specifico del tuo sito se diverso).
+Puoi monitorare lo stato dei deploy e accedere al tuo sito dalla dashboard di Netlify: [https://app.netlify.com/sites/bookmark](https://app.netlify.com/sites/bookmark) (o l'URL specifico del tuo sito se diverso).
 
 Per un deploy manuale in produzione (generalmente non necessario con il CD attivo):
 ```bash

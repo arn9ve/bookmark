@@ -1,6 +1,6 @@
 # 🔧 Setup Guide - Sistema Profili e Salvataggio Ricette
 
-Questa guida ti aiuterà a configurare il sistema di gestione utenti e salvataggio ricette per l'app SiChef.
+Questa guida ti aiuterà a configurare il sistema di gestione utenti e salvataggio ricette per l'app bookmark.
 
 ## 📋 Prerequisiti
 

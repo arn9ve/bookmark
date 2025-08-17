@@ -25,7 +25,7 @@ async function downloadFile(url: string, outputPath: string): Promise<void> {
 export async function transcribeAudio(
     videoDetails: VideoDetailsBase
   ): Promise<TranscribeAudioResponse> {
-    let tempFilePath: string | undefined = undefined;
+    let tempFilePath: string = "";
   
     try {
       const { audioUrl, description: originalDescription, platform } = videoDetails;
@@ -88,9 +88,17 @@ export async function transcribeAudio(
           return { transcriptionText: originalDescription || "Errore: File audio scaricato è vuoto.", error: "File audio vuoto" };
         }
   
+        // Prova formati e MIME corretti per evitare 400 su alcuni stream TikTok
+        const fileStream = fs.createReadStream(tempFilePath);
         const whisperTranscription = await openai.audio.transcriptions.create({
-          file: fs.createReadStream(tempFilePath),
-          model: 'whisper-1',
+          file: fileStream as unknown as File,
+          model: 'gpt-4o-transcribe',
+        }).catch(async (err) => {
+          console.warn('Prima chiamata Whisper fallita, riprovo con modello fallback whisper-1:', err?.message || err);
+          return openai.audio.transcriptions.create({
+            file: fs.createReadStream(tempFilePath) as unknown as File,
+            model: 'whisper-1',
+          });
         });
         const transcriptionText = whisperTranscription.text;
         console.log(`Trascrizione Whisper (${platform}) completata.`);

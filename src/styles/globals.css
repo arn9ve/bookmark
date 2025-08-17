@@ -8,23 +8,23 @@
 
 :root {
   /* === PALETTE COLORI PRINCIPALE === */
-  --primary: #ADEBEB;
-  --primary-dark: #145252;
-  --primary-light: #D9F2F2;
-  --primary-hover: #98DEDE;
+  --primary: #0047FF; /* Strong blue */
+  --primary-dark: #001B5E; /* Deep blue */
+  --primary-light: #E6EDFF; /* Pale blue */
+  --primary-hover: #0039CC;
   
   /* === COLORI NEUTRI === */
-  --background: #F9F9F9;
+  --background: #FCFCF6;
   --surface: #FFFFFF;
-  --surface-secondary: #F5F5F5;
-  --border: #EEEEEE;
-  --border-light: #F5F5F5;
-  --border-dark: #CCCCCC;
+  --surface-secondary: #FFFBEA; /* subtle yellow wash */
+  --border: #111111; /* brutalist strong border */
+  --border-light: #EDEDED;
+  --border-dark: #000000;
   
   /* === COLORI TESTO === */
-  --text-primary: #145252;
-  --text-secondary: #555555;
-  --text-tertiary: #757575;
+  --text-primary: #0A0A0A;
+  --text-secondary: #1F2937;
+  --text-tertiary: #4B5563;
   --text-placeholder: #A3A3A3;
   --text-disabled: #CCCCCC;
   
@@ -39,10 +39,10 @@
   --info-light: #E3F2FD;
   
   /* === COLORI SPECIALI === */
-  --promo-border-1: #C4E456;
-  --promo-border-2: #F5C5D8;
-  --accent-1: #FFE082;
-  --accent-2: #B39DDB;
+  --promo-border-1: #FFDD00; /* yellow accent border */
+  --promo-border-2: #BBD1FF; /* blue accent border */
+  --accent-1: #FFDD00; /* primary yellow accent */
+  --accent-2: #1E40AF; /* deep blue accent */
   
   /* === SPAZIATURE === */
   --space-xs: 4px;
@@ -54,18 +54,18 @@
   --space-3xl: 64px;
   
   /* === GEOMETRIA E BORDI === */
-  --border-radius-sm: 8px;
-  --border-radius: 12px;
-  --border-radius-lg: 16px;
-  --border-radius-xl: 24px;
-  --border-width: 1px;
-  --border-width-thick: 2px;
+  --border-radius-sm: 4px;
+  --border-radius: 6px; /* squarer, brutalist */
+  --border-radius-lg: 8px;
+  --border-radius-xl: 10px;
+  --border-width: 2px;
+  --border-width-thick: 4px;
   
   /* === OMBRE === */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.9);
+  --shadow: 4px 4px 0 rgba(0, 0, 0, 0.95);
+  --shadow-md: 6px 6px 0 rgba(0, 0, 0, 1);
+  --shadow-lg: 8px 8px 0 rgba(0, 0, 0, 1);
   
   /* === TRANSIZIONI === */
   --transition-fast: 0.15s ease-in-out;
@@ -185,6 +185,36 @@ body {
 
 }
 
+/* === BRUTALIST THEME OVERRIDES === */
+.brutalist {
+  --surface-secondary: #FFFBEA;
+  --border: #000000;
+  --border-dark: #000000;
+  --border-width: 2px;
+  --border-width-thick: 4px;
+}
+
+.brutalist .base-container,
+.brutalist .card,
+.brutalist .input-field,
+.brutalist .btn,
+.brutalist .badge,
+.brutalist .vault-card,
+.brutalist .vault-card-site,
+.brutalist .vault-card-book,
+.brutalist .vault-card-collection {
+  border-color: var(--border-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.brutalist .btn-primary { background-color: var(--accent-1); color: var(--text-primary); }
+.brutalist .btn-secondary { background-color: var(--primary); color: #fff; }
+.brutalist .heading-1,
+.brutalist .heading-2,
+.brutalist .heading-3,
+.brutalist .heading-4,
+.brutalist .heading-5 { color: var(--text-primary); }
+
 /* === RESET TIPOGRAFIA === */
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
@@ -256,4 +286,31 @@ ul, ol {
 
 [data-vaul-drawer][data-vaul-drawer-direction=bottom]::after {
   height: 0% !important;
+}
+
+/* ==========================================================================
+   SCROLLBARS - MINIMAL, NO TRACK BACKGROUND
+   ==========================================================================
+*/
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border-dark);
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary);
+}
+
+* {
+  scrollbar-color: var(--border-dark) transparent;
+  scrollbar-width: thin;
 }

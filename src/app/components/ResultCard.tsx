@@ -1,5 +1,7 @@
 import type { ScrapedData } from "@/src/types";
 import { MapPin, Star, Utensils, Video, Heart, User } from 'lucide-react';
+import { classifyRestaurant, getPriorityLabel, getPriorityColor } from "@/src/lib/scraping/classification";
+import Button from "@/src/app/_components/ui/Button";
 
 interface ResultCardProps {
   item: ScrapedData;
@@ -8,11 +10,12 @@ interface ResultCardProps {
 }
 
 export default function ResultCard({ item, isFavorite, onToggleFavorite }: ResultCardProps) {
-
-
   if (!item.analysis) {
     return null;
   }
+
+  // Applica la classificazione se non è già presente
+  const analysis = item.analysis.priority ? item.analysis : classifyRestaurant(item.analysis);
 
   const { 
     restaurantName, 
@@ -21,8 +24,10 @@ export default function ResultCard({ item, isFavorite, onToggleFavorite }: Resul
     restaurantLocation,
     latitude,
     longitude,
-    formattedAddress
-  } = item.analysis;
+    formattedAddress,
+    priority,
+    isPorkSpecialist
+  } = analysis;
 
   const generateMapsUrl = () => {
     let query;
@@ -46,7 +51,7 @@ export default function ResultCard({ item, isFavorite, onToggleFavorite }: Resul
 
 
   return (
-    <div className="card elevated interactive overflow-hidden">
+    <div className="card interactive overflow-hidden">
       <div className="flex flex-col lg:flex-row gap-0">
         {/* Image Section */}
         {item.thumbnailUrl && (
@@ -56,18 +61,13 @@ export default function ResultCard({ item, isFavorite, onToggleFavorite }: Resul
               alt={`Thumbnail for ${restaurantName}`} 
               className="w-full h-full object-cover transition-transform duration-300" 
             />
-            <div className="absolute top-3 right-3">
-              <button 
-                className={`btn-round transition-all ${
-                  isFavorite 
-                    ? 'bg-error text-surface shadow-lg' 
-                    : 'bg-surface/90 backdrop-blur-sm text-text-tertiary hover:text-error'
-                }`}
-                onClick={() => onToggleFavorite(item.id)}
-                title={isFavorite ? 'Rimuovi dai salvati' : 'Salva'}
-              >
-                <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-              </button>
+            <div className="absolute top-3 right-3 flex items-center gap-2">
+              {item.isNew && (
+                <span className="text-[10px] uppercase tracking-wide bg-success text-white px-2 py-0.5 rounded-full shadow-sm">Nuovo</span>
+              )}
+              <Button size="sm" className={` w-8 h-8 ${isFavorite ? 'is-active btn-fav' : 'btn-fav'}`} onClick={() => onToggleFavorite(item.id)} title={isFavorite ? 'Rimuovi dai salvati' : 'Salva'}>
+                <Heart size={16} fill={isFavorite ? 'currentColor' : 'none'} />
+              </Button>
             </div>
           </div>
         )}
@@ -77,9 +77,39 @@ export default function ResultCard({ item, isFavorite, onToggleFavorite }: Resul
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="mb-4">
-              <h2 className="heading-2 text-text-primary mb-3 line-clamp-2">
-                {restaurantName}
-              </h2>
+              <div className="flex items-start justify-between mb-3">
+                <h2 className="heading-2 text-text-primary line-clamp-2 flex-1">
+                  {restaurantName}
+                </h2>
+                
+                {/* Badge priorità e maiale */}
+                <div className="flex flex-col gap-1 ml-3 flex-shrink-0">
+                  {priority && (
+                    <span 
+                      className="text-xs px-2 py-1 rounded-full font-medium text-white"
+                      style={{ backgroundColor: getPriorityColor(priority) }}
+                    >
+                      {priority === 'must-visit' ? '⭐' : priority === 'recommended' ? '👍' : '📍'}
+                    </span>
+                  )}
+                  
+                  {isPorkSpecialist && (
+                    <span className="text-xs bg-warning text-white px-2 py-1 rounded-full text-center">
+                      🐷
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              {/* Priority label */}
+              {priority && (
+                <div className="mb-3">
+                  <span className="small-text text-text-tertiary">
+                    {getPriorityLabel(priority)}
+                    {isPorkSpecialist && ' • Specialista Maiale'}
+                  </span>
+                </div>
+              )}
               
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-text-tertiary">

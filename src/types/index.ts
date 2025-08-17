@@ -9,6 +9,8 @@ export interface ScrapedData {
   saves?: number;
   shares?: number;
   creatorName?: string;
+  // Segna gli elementi appena aggiunti in questa sessione
+  isNew?: boolean;
 }
 
 // Details for a single video, used internally in the scraping process
@@ -36,11 +38,17 @@ export interface AnalysisResult {
   isRestaurantReview: boolean;
   restaurantName?: string;
   dishDescription?: string;
-
   creatorOpinion?: string;
   restaurantLocation?: string;
+  priority?: RestaurantPriority;
+  isPorkSpecialist?: boolean;
   error?: string;
+  // When multiple restaurants are mentioned in one video/description
+  restaurants?: BasicRestaurantInfo[];
 }
+
+// Priority levels for restaurant recommendations
+export type RestaurantPriority = 'must-visit' | 'recommended' | 'if-in-area';
 
 // Structured analysis for restaurant reviews
 export interface RestaurantAnalysis {
@@ -51,4 +59,9 @@ export interface RestaurantAnalysis {
   latitude?: number;
   longitude?: number;
   formattedAddress?: string;
+  priority?: RestaurantPriority;
+  isPorkSpecialist?: boolean; // Indica se il ristorante fa principalmente maiale
 }
+
+// Basic restaurant info without geocoding fields, used during analysis
+export type BasicRestaurantInfo = Omit<RestaurantAnalysis, 'latitude' | 'longitude' | 'formattedAddress'>;

@@ -28,7 +28,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "sichef/*": ["./*"]
+      "bookmark/*": ["./*"]
     }
   },
   "include": [

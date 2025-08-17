@@ -2,7 +2,7 @@
 description: UI task
 alwaysApply: false
 ---
-# DESIGN SYSTEM RULES - SiChef
+# DESIGN SYSTEM RULES - bookmark
 
 ## Cose da non fare
 - NON usare gradienti se non richiesto
@@ -312,7 +312,7 @@ bg-success, bg-success-light, text-success
 
 **Versione**: 2.0 - Sistema di Design Completo
 **Ultimo aggiornamento**: Gennaio 2025
-**File correlati**: `src/styles/globals.css`, `src/styles/uikit.css`# DESIGN SYSTEM RULES - SiChef
+**File correlati**: `src/styles/globals.css`, `src/styles/uikit.css`# DESIGN SYSTEM RULES - bookmark
 
 ## Cose da non fare
 - NON usare gradienti se non richiesto

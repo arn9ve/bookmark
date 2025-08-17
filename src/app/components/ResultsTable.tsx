@@ -1,5 +1,6 @@
 import type { ScrapedData } from "@/src/types";
 import { Heart, MapPin, Video } from 'lucide-react';
+import Button from "@/src/app/_components/ui/Button";
 
 interface ResultsTableProps {
   data: ScrapedData[];
@@ -46,21 +47,13 @@ export default function ResultsTable({ data, favorites, onToggleFavorite }: Resu
               <td className="text-center">
                 <div className="flex justify-center gap-2">
                   {/* Maps - Priorità 1 */}
-                  <a 
-                    href={generateMapsUrl(item)} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-circle btn-sm btn-primary hover:scale-110 transition-transform"
-                    title="Apri su Maps"
-                  >
+                  <Button href={generateMapsUrl(item)} size="sm" className="btn btn-circle btn-sm btn-primary hover:scale-110 transition-transform" title="Apri su Maps">
                     <MapPin size={16} />
-                  </a>
+                  </Button>
                   
                   {/* Salva - Priorità 2 */}
                   <button 
-                    className={`btn btn-circle btn-sm hover:scale-110 transition-transform ${
-                      favorites.includes(item.id) ? 'btn-error' : 'btn-outline btn-error'
-                    }`}
+                    className={`btn-icon-button btn-sm btn-fav ${favorites.includes(item.id) ? 'is-active' : ''}`}
                     onClick={() => onToggleFavorite(item.id)}
                     title={favorites.includes(item.id) ? 'Rimuovi dai salvati' : 'Salva'}
                   >
@@ -68,18 +61,19 @@ export default function ResultsTable({ data, favorites, onToggleFavorite }: Resu
                   </button>
                   
                   {/* Video - Priorità 3 (terziario) */}
-                  <a 
-                    href={item.videoUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn btn-circle btn-sm btn-outline btn-secondary hover:scale-110 transition-transform opacity-75"
-                    title="Guarda il Video"
-                  >
+                  <Button href={item.videoUrl} size="sm" className="btn btn-secondary btn-sm" title="Guarda il Video">
                     <Video size={16} />
-                  </a>
+                  </Button>
                 </div>
               </td>
-              <td className="font-semibold">{item.analysis?.restaurantName}</td>
+              <td className="font-semibold">
+                <div className="flex items-center gap-2">
+                  <span>{item.analysis?.restaurantName}</span>
+                  {item.isNew && (
+                    <span className="text-[10px] uppercase tracking-wide bg-success text-white px-2 py-0.5 rounded-full">Nuovo</span>
+                  )}
+                </div>
+              </td>
               <td className="text-sm">{item.analysis?.dishDescription}</td>
               <td className="text-sm text-gray-600">{item.analysis?.formattedAddress || item.analysis?.restaurantLocation}</td>
             </tr>

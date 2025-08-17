@@ -16,17 +16,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'URL is required' }, { status: 400 });
   }
 
-  console.log(`[API Scrape] Inizio scraping per il profilo: ${url} con limite ${limit} e keywords "${keywords}"`);
+  // Rileva se è un URL di singolo video (TikTok/Instagram) piuttosto che di profilo
+  const isSingleVideoUrl = /tiktok\.com\/.+\/video\//i.test(url) || /instagram\.com\/reel\//i.test(url);
 
-  const profileResult = await scrapeProfile(url, limit);
-
-  if (profileResult.error || !profileResult.videoUrls) {
-    return NextResponse.json({ error: profileResult.error || 'Could not get video URLs' }, { status: 500 });
+  const videoUrls: string[] = [];
+  if (isSingleVideoUrl) {
+    console.log(`[API Scrape] Modalità singolo video rilevata: ${url}`);
+    videoUrls.push(url);
+  } else {
+    console.log(`[API Scrape] Inizio scraping per il profilo: ${url} con limite ${limit} e keywords "${keywords}"`);
+    const profileResult = await scrapeProfile(url, limit);
+    if (profileResult.error || !profileResult.videoUrls) {
+      return NextResponse.json({ error: profileResult.error || 'Could not get video URLs' }, { status: 500 });
+    }
+    videoUrls.push(...profileResult.videoUrls);
   }
 
-  console.log(`[API Scrape] Trovati ${profileResult.videoUrls.length} video. Inizio analisi individuale...`);
+  console.log(`[API Scrape] Trovati ${videoUrls.length} video. Inizio analisi individuale...`);
 
-  const analysisPromises = profileResult.videoUrls.map(async (videoUrl) => {
+  const analysisPromises = videoUrls.map(async (videoUrl) => {
     try {
       // 1. Get video info
       const videoInfo = await getVideoInfo(videoUrl);
@@ -50,48 +58,76 @@ export async function POST(request: Request) {
       if (transcriptionResult.error) {
         console.warn(`Errore trascrizione per ${videoUrl}: ${transcriptionResult.error}. L'analisi procederà con la sola descrizione.`);
       }
-      const fullText = transcriptionResult.transcriptionText || videoInfo.description || '';
+      const captionText = videoInfo.description || '';
+      const transcriptText = transcriptionResult.transcriptionText || '';
+      const fullText = [captionText, transcriptText].filter(Boolean).join('\n');
 
-      // 4. Analyze text
-      const analysisResult = await analyzeText(fullText);
-      if (analysisResult.error || !analysisResult.isRestaurantReview || !analysisResult.restaurantName || !analysisResult.restaurantLocation) {
+      // 4. Analyze text (caption + transcript)
+      let analysisResult = await analyzeText(fullText);
+      // Fallback: se non rileva recensione, prova ad analizzare SOLO la didascalia, che spesso elenca i ristoranti
+      if (!analysisResult.isRestaurantReview && captionText) {
+        console.log(`[API Scrape] Analisi combinata fallita per ${videoUrl}. Riprovo con sola didascalia (caption).`);
+        const captionOnlyResult = await analyzeText(captionText);
+        if (captionOnlyResult.isRestaurantReview) {
+          analysisResult = captionOnlyResult;
+        }
+      }
+
+      if (analysisResult.error || !analysisResult.isRestaurantReview) {
         if(analysisResult.error) console.error(`Errore analisi per ${videoUrl}: ${analysisResult.error}`);
         else console.log(`Il video ${videoUrl} non è una recensione di ristorante valida o mancano dati essenziali.`);
-        return null;
+        return [] as ScrapedData[];
       }
       
-      // 5. Geocode restaurant location
-      const geocodeResult = await geocodeRestaurant(
-        analysisResult.restaurantName,
-        analysisResult.restaurantLocation
-      );
-      if (geocodeResult.error) {
-        console.warn(`[Geocoding] Non è stato possibile geolocalizzare "${analysisResult.restaurantName}, ${analysisResult.restaurantLocation}". Errore: ${geocodeResult.error}`);
+      // Sostiene più ristoranti per video
+      const restaurantsList = analysisResult.restaurants && analysisResult.restaurants.length > 0
+        ? analysisResult.restaurants
+        : [{
+            restaurantName: analysisResult.restaurantName || '',
+            dishDescription: analysisResult.dishDescription || '',
+            creatorOpinion: analysisResult.creatorOpinion || '',
+            restaurantLocation: analysisResult.restaurantLocation || '',
+          }];
+
+      const items: ScrapedData[] = [];
+      for (const r of restaurantsList) {
+        if (!r.restaurantName) {
+          continue;
+        }
+        // 5. Geocode restaurant location per ciascun ristorante
+        const geocodeResult = await geocodeRestaurant(
+          r.restaurantName,
+          r.restaurantLocation || ''
+        );
+        if (geocodeResult.error) {
+          console.warn(`[Geocoding] Non è stato possibile geolocalizzare "${r.restaurantName}, ${r.restaurantLocation}". Errore: ${geocodeResult.error}`);
+        }
+
+        const restaurantAnalysis: RestaurantAnalysis = {
+          restaurantName: r.restaurantName,
+          dishDescription: r.dishDescription || 'N/A',
+          creatorOpinion: r.creatorOpinion || 'N/A',
+          restaurantLocation: r.restaurantLocation || geocodeResult.formattedAddress || '',
+          latitude: geocodeResult.latitude,
+          longitude: geocodeResult.longitude,
+          formattedAddress: geocodeResult.formattedAddress,
+        };
+
+        const scrapedData: ScrapedData = {
+          id: uuidv4(),
+          videoUrl: videoUrl,
+          caption: videoInfo.description || '',
+          analysis: restaurantAnalysis,
+          thumbnailUrl: videoInfo.thumbnailUrl,
+          likes: videoInfo.likes,
+          shares: videoInfo.shares,
+          saves: videoInfo.saves,
+          creatorName: videoInfo.author,
+        };
+        items.push(scrapedData);
       }
 
-      const restaurantAnalysis: RestaurantAnalysis = {
-        restaurantName: analysisResult.restaurantName,
-        dishDescription: analysisResult.dishDescription || 'N/A',
-        creatorOpinion: analysisResult.creatorOpinion || 'N/A',
-        restaurantLocation: analysisResult.restaurantLocation,
-        latitude: geocodeResult.latitude,
-        longitude: geocodeResult.longitude,
-        formattedAddress: geocodeResult.formattedAddress,
-      };
-
-      const scrapedData: ScrapedData = {
-        id: uuidv4(),
-        videoUrl: videoUrl,
-        caption: videoInfo.description || '',
-        analysis: restaurantAnalysis,
-        thumbnailUrl: videoInfo.thumbnailUrl,
-        likes: videoInfo.likes,
-        shares: videoInfo.shares,
-        saves: videoInfo.saves,
-        creatorName: videoInfo.author,
-      };
-      
-      return scrapedData;
+      return items;
 
     } catch (e) {
       console.error(`Errore grave durante l'analisi del video ${videoUrl}:`, e);
@@ -99,7 +135,8 @@ export async function POST(request: Request) {
     }
   });
 
-  const results = (await Promise.all(analysisPromises)).filter((r): r is ScrapedData => r !== null);
+  const nestedResults = await Promise.all(analysisPromises);
+  const results = nestedResults.flat().filter(Boolean) as ScrapedData[];
 
   console.log(`[API Scrape] Analisi completata. Restituiti ${results.length} risultati validi.`);
 
